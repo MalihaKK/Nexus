@@ -1,6 +1,8 @@
-import React from 'react';
+//import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+
+import { CollaborationProvider } from "./context/CollaborationContext";
 
 // Layouts
 import { DashboardLayout } from './components/layout/DashboardLayout';
@@ -27,13 +29,17 @@ import { SettingsPage } from './pages/settings/SettingsPage';
 import { HelpPage } from './pages/help/HelpPage';
 import { DealsPage } from './pages/deals/DealsPage';
 
+import { Toaster } from "react-hot-toast";
+
 // Chat Pages
 import { ChatPage } from './pages/chat/ChatPage';
 
 function App() {
   return (
     <AuthProvider>
+      <CollaborationProvider>
       <Router>
+         <Toaster position="top-right" />
         <Routes>
           {/* Authentication Routes */}
           <Route path="/login" element={<LoginPage />} />
@@ -97,6 +103,7 @@ function App() {
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </Router>
+      </CollaborationProvider>
     </AuthProvider>
   );
 }

@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Any custom overrides or other styles can go here */
+.fc .fc-button-primary {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+}
