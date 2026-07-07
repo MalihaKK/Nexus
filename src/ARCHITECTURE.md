@@ -12,21 +12,36 @@ The project utilizes a modular architecture within the src/ directory to separat
 
 # Key Directories:
 
-src/components/: Houses the modular components used to build the interface.
+# Key Directories:
 
-ui/: Reusable, atomic UI elements (e.g., Button, Input, Card).
+src/components/: Houses reusable and feature-specific UI components.
+
+ui/: Reusable, atomic UI elements (e.g., Button, Input, Card, Badge, Avatar).
 
 layout/: Structural components that define the app's shell (DashboardLayout, Navbar, Sidebar).
 
 chat/, collaboration/, entrepreneur/, investor/: Feature-specific components.
 
-src/pages/: Contains route-level page components, organized by functional module (e.g., auth/, dashboard/, deals/, profile/).
+collaboration/calendar/: Meeting scheduling components including Availability Calendar, Availability Modal, Meeting Request Modal, Meeting Requests, and Confirmed Meetings.
 
-src/context/: Manages global application state, including user authentication (AuthContext.tsx).
+src/pages/: Contains route-level page components, organized by functional modules (e.g., auth/, dashboard/, deals/, profile/, collaboration/).
 
-src/data/: Stores static data and mock objects used for development and testing.
+src/context/: Manages global application state.
 
-src/types/: Centralized location for TypeScript interfaces, ensuring type safety throughout the codebase.
+- AuthContext.tsx: Handles user authentication.
+- CollaborationContext.tsx: Manages availability slots, meeting requests, confirmed meetings, request actions (send, accept, decline), calendar synchronization, and localStorage persistence.
+
+src/data/: Stores mock users, collaboration data, and sample meeting data used during development.
+
+src/types/: Centralized location for shared TypeScript interfaces.
+
+Week 1 introduced:
+
+- AvailabilitySlot
+- MeetingRequest
+- ConfirmedMeeting
+
+to support the meeting scheduling and collaboration workflow.
 
 
 # Technology Stack:
@@ -39,14 +54,27 @@ Styling: Tailwind CSS 3.4.1 (with PostCSS and Autoprefixer).
 
 Routing: React Router DOM 6.22.1.
 
-HTTP Client: Axios 1.6.7 (This is important! You are using Axios for API requests).
+HTTP Client: Axios 1.6.7.
+
+State Management:
+
+- React Context API
+- AuthContext
+- CollaborationContext
+
+Calendar:
+
+- FullCalendar
+- @fullcalendar/react
+- @fullcalendar/daygrid
+- @fullcalendar/interaction
 
 Utilities:
 
-Icons: lucide-react (for UI icons).
-
-Date Handling: date-fns (perfect for your upcoming Calendar task).
-
-Forms/UI: react-dropzone (for file uploads) and react-hot-toast (for UI notifications).
+- Icons: lucide-react
+- Date Handling: date-fns
+- Forms/UI: react-dropzone
+- Notifications: react-hot-toast
+- Browser Storage: localStorage (for persisting availability slots, meeting requests, and confirmed meetings)
 
 Deployment: Vercel.
