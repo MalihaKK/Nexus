@@ -1,80 +1,196 @@
 ## Nexus Platform Architecture
 
-# Overview:
+# Overview
 
-Nexus is a robust React-based collaboration platform designed for entrepreneurs and investors. This document provides an overview of the directory structure and the architectural patterns used in the project to maintain consistency and scalability.
+Nexus is a React-based collaboration platform that connects entrepreneurs and investors. The application follows a modular architecture that separates reusable UI components, feature modules, pages, shared types, and global state management to ensure scalability, maintainability, and clean code organization.
 
+---
 
-# Project Structure:
+# Project Structure
 
-The project utilizes a modular architecture within the src/ directory to separate concerns and ensure maintainability.
+The project follows a feature-based architecture inside the `src/` directory.
 
+---
 
-# Key Directories:
+# Key Directories
 
-# Key Directories:
+### src/components/
 
-src/components/: Houses reusable and feature-specific UI components.
+Contains reusable and feature-specific UI components.
 
-ui/: Reusable, atomic UI elements (e.g., Button, Input, Card, Badge, Avatar).
+- **ui/**: Shared UI components such as Button, Card, Badge, Input, Avatar, and Modal.
+- **layout/**: Application layout components including DashboardLayout, Navbar, and Sidebar.
+- **chat/**: Chat interface components.
+- **collaboration/**: Collaboration-related components.
+- **collaboration/calendar/**:
+  - AvailabilityCalendar
+  - AvailabilityModal
+  - MeetingRequestModal
+  - MeetingRequests
+  - ConfirmedMeetings
+- **documentChamber/**:
+  - DocumentChamber
+  - PDF/document preview
+  - E-signature section
+  - Contract information panel
+  - Document status management
 
-layout/: Structural components that define the app's shell (DashboardLayout, Navbar, Sidebar).
+---
 
-chat/, collaboration/, entrepreneur/, investor/: Feature-specific components.
+### src/pages/
 
-collaboration/calendar/: Meeting scheduling components including Availability Calendar, Availability Modal, Meeting Request Modal, Meeting Requests, and Confirmed Meetings.
+Contains route-level pages organized by feature.
 
-src/pages/: Contains route-level page components, organized by functional modules (e.g., auth/, dashboard/, deals/, profile/, collaboration/).
+Examples include:
 
-src/context/: Manages global application state.
+- auth/
+- dashboard/
+- collaboration/
+- deals/
+- profile/
+- documents/
 
-- AuthContext.tsx: Handles user authentication.
-- CollaborationContext.tsx: Manages availability slots, meeting requests, confirmed meetings, request actions (send, accept, decline), calendar synchronization, and localStorage persistence.
+The **DocumentsPage** provides:
 
-src/data/: Stores mock users, collaboration data, and sample meeting data used during development.
+- Document upload
+- Document management
+- Storage overview
+- File deletion
+- Document selection
+- Integration with the Document Chamber
 
-src/types/: Centralized location for shared TypeScript interfaces.
+---
 
-Week 1 introduced:
+### src/context/
+
+Stores global application state.
+
+- **AuthContext.tsx**
+  - User authentication
+  - Login state
+
+- **CollaborationContext.tsx**
+  - Availability slots
+  - Meeting requests
+  - Meeting approvals
+  - Confirmed meetings
+  - Calendar synchronization
+  - localStorage persistence
+
+---
+
+### src/data/
+
+Contains mock data used during development.
+
+Examples include:
+
+- Users
+- Meetings
+- Collaboration data
+
+---
+
+### src/types/
+
+Contains shared TypeScript interfaces used throughout the application.
+
+Examples include:
 
 - AvailabilitySlot
 - MeetingRequest
 - ConfirmedMeeting
+- DocumentItem
 
-to support the meeting scheduling and collaboration workflow.
+These interfaces provide consistent data models for scheduling, collaboration, and document management.
 
+---
 
-# Technology Stack:
+# Technology Stack
 
-Framework: React 18.3.1 (built with Vite 5.4.2).
+### Framework
 
-Language: TypeScript 5.5.3.
+- React 18.3.1
+- Vite 5.4.2
 
-Styling: Tailwind CSS 3.4.1 (with PostCSS and Autoprefixer).
+### Language
 
-Routing: React Router DOM 6.22.1.
+- TypeScript 5.5.3
 
-HTTP Client: Axios 1.6.7.
+### Styling
 
-State Management:
+- Tailwind CSS 3.4.1
+- PostCSS
+- Autoprefixer
+
+### Routing
+
+- React Router DOM 6.22.1
+
+### HTTP Client
+
+- Axios 1.6.7
+
+### State Management
 
 - React Context API
+- React Hooks
 - AuthContext
 - CollaborationContext
 
-Calendar:
+### Calendar & Scheduling
 
 - FullCalendar
 - @fullcalendar/react
 - @fullcalendar/daygrid
 - @fullcalendar/interaction
 
-Utilities:
+Used for:
 
-- Icons: lucide-react
-- Date Handling: date-fns
-- Forms/UI: react-dropzone
-- Notifications: react-hot-toast
-- Browser Storage: localStorage (for persisting availability slots, meeting requests, and confirmed meetings)
+- Availability scheduling
+- Meeting requests
+- Confirmed meetings
 
-Deployment: Vercel.
+### Document Processing
+
+- react-signature-canvas
+- FileReader API
+
+Used for:
+
+- Uploading documents
+- Previewing PDF files
+- Capturing digital signatures
+
+### Utilities
+
+- lucide-react
+- date-fns
+- react-dropzone
+- react-hot-toast
+
+### Browser Storage
+
+- localStorage
+
+Used to persist:
+
+- Availability slots
+- Meeting requests
+- Confirmed meetings
+- Uploaded documents
+- Document status
+
+---
+
+# Architecture Highlights
+
+The platform follows a modular and component-driven architecture where:
+
+- Reusable UI components are shared across all modules.
+- Feature-specific functionality is isolated into dedicated folders.
+- Shared TypeScript interfaces ensure consistent data structures.
+- React Context manages global collaboration and authentication state.
+- Browser localStorage is used to preserve user data between sessions.
+- The document workflow supports uploading, previewing, status tracking, and mock digital signatures.
+- The meeting scheduling workflow supports availability management, meeting requests, approvals, and confirmed meetings.

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'accent' | 'outline' | 'ghost' | 'link' | 'success' | 'warning' | 'error';
+export type ButtonVariant = 'primary' | 'secondary' | 'accent' | 'outline' | 'ghost' | 'link' | 'success' | 'warning' | 'error' | "danger";
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -47,6 +47,7 @@ export const Button: React.FC<ButtonProps> = ({
     success: 'bg-success-500 text-white hover:bg-success-700 focus:ring-success-500',
     warning: 'bg-warning-500 text-white hover:bg-warning-700 focus:ring-warning-500',
     error: 'bg-error-500 text-white hover:bg-error-700 focus:ring-error-500',
+     danger:"bg-red-600 hover:bg-red-700 text-white",
   };
   
   // Loading state
