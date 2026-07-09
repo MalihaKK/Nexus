@@ -17,3 +17,25 @@ Implemented the meeting scheduling module for the Nexus platform, enabling entre
   - Meeting requests
   - Confirmed meetings
 - Added a success notification after sending a meeting request.
+  
+# Week 2 – Video Calling & Document Chamber
+
+## Overview
+
+Implemented the Video Calling interface and Document Chamber module for the Nexus platform, enhancing collaboration through virtual meetings and digital document management.
+
+## Features Implemented
+
+### Video Calling
+- Built a frontend video call interface.
+- Added Start/End Call controls.
+- Implemented Video and Audio toggle buttons.
+- Added Screen Share UI (mock).
+
+### Document Chamber
+- Built the Document Chamber interface.
+- Added upload support for PDF, DOC, and DOCX files.
+- Implemented document preview and mock E-signature.
+- Added document status management (Draft, In Review, Signed).
+- Enabled document selection and deletion.
+- Used localStorage to persist uploaded documents and document status.
