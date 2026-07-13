@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Users, PieChart, Filter, Search, PlusCircle } from "lucide-react";
+import {
+  Users,
+  PieChart,
+  Filter,
+  Search,
+  PlusCircle,
+  Wallet,
+  DollarSign,
+} from "lucide-react";
 import { Button } from "../../components/ui/Button";
 import { Card, CardBody, CardHeader } from "../../components/ui/Card";
 import { Input } from "../../components/ui/Input";
@@ -11,6 +19,7 @@ import { useCollaboration } from "../../context/CollaborationContext";
 import { entrepreneurs } from "../../data/users";
 import { getRequestsFromInvestor } from "../../data/collaborationRequests";
 import { AvailabilityCalendar } from "../../components/collaboration/calendar/AvailabilityCalendar";
+import { Transaction } from "../../types/payment";
 
 export const InvestorDashboard: React.FC = () => {
   const { requests, confirmed, acceptRequest, declineRequest } =
@@ -53,6 +62,23 @@ export const InvestorDashboard: React.FC = () => {
 
   // Get unique industries for filter
   const industries = Array.from(new Set(entrepreneurs.map((e) => e.industry)));
+  // Payment Data
+  const walletBalance: number = JSON.parse(
+    localStorage.getItem("nexus-wallet") || "10000",
+  );
+
+  const transactions: Transaction[] = JSON.parse(
+    localStorage.getItem("nexus-payments") || "[]",
+  );
+
+  const fundingTransactions = transactions.filter(
+    (transaction) => transaction.type === "Funding",
+  );
+
+  const totalFunding = fundingTransactions.reduce(
+    (sum, transaction) => sum + transaction.amount,
+    0,
+  );
 
   // Toggle industry selection
   const toggleIndustry = (industry: string) => {
@@ -118,7 +144,7 @@ export const InvestorDashboard: React.FC = () => {
       </div>
 
       {/* Stats summary */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card className="bg-primary-50 border border-primary-100">
           <CardBody>
             <div className="flex items-center">
@@ -170,6 +196,25 @@ export const InvestorDashboard: React.FC = () => {
                     sentRequests.filter((req) => req.status === "accepted")
                       .length
                   }
+                </h3>
+              </div>
+            </div>
+          </CardBody>
+        </Card>
+        <Card className="bg-green-50 border border-green-100">
+          <CardBody>
+            <div className="flex items-center">
+              <div className="p-3 bg-green-100 rounded-full mr-4">
+                <Wallet size={20} className="text-green-700" />
+              </div>
+
+              <div>
+                <p className="text-sm font-medium text-green-700">
+                  Wallet Balance
+                </p>
+
+                <h3 className="text-xl font-semibold text-green-900">
+                  ${walletBalance.toLocaleString()}
                 </h3>
               </div>
             </div>
@@ -265,6 +310,42 @@ export const InvestorDashboard: React.FC = () => {
                   <span className="text-xs font-semibold text-green-600">
                     Confirmed
                   </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardBody>
+      </Card>
+
+      <Card className="mt-6">
+        <CardHeader className="flex justify-between items-center">
+          <h2 className="text-lg font-semibold">Funding Summary</h2>
+
+          <span className="text-green-600 font-semibold">
+            ${totalFunding.toLocaleString()}
+          </span>
+        </CardHeader>
+
+        <CardBody>
+          {fundingTransactions.length === 0 ? (
+            <p className="text-gray-500">No funding has been provided yet.</p>
+          ) : (
+            <div className="space-y-3">
+              {fundingTransactions.slice(0, 5).map((transaction) => (
+                <div
+                  key={transaction.id}
+                  className="flex justify-between items-center border rounded-lg p-3"
+                >
+                  <div>
+                    <h4 className="font-medium">{transaction.receiver}</h4>
+
+                    <p className="text-sm text-gray-500">{transaction.date}</p>
+                  </div>
+
+                  <div className="flex items-center gap-2 text-green-600 font-semibold">
+                    <DollarSign size={18} />
+                    {transaction.amount}
+                  </div>
                 </div>
               ))}
             </div>

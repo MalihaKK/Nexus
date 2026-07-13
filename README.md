@@ -21,7 +21,6 @@ Implemented the meeting scheduling module for the Nexus platform, enabling entre
 # Week 2 – Video Calling & Document Chamber
 
 ## Overview
-
 Implemented the Video Calling interface and Document Chamber module for the Nexus platform, enhancing collaboration through virtual meetings and digital document management.
 
 ## Features Implemented
@@ -39,3 +38,21 @@ Implemented the Video Calling interface and Document Chamber module for the Nexu
 - Added document status management (Draft, In Review, Signed).
 - Enabled document selection and deletion.
 - Used localStorage to persist uploaded documents and document status.
+
+# Week 3 – Payments, Security & Collaboration Enhancements
+
+## Overview
+Enhanced the Nexus platform by implementing a mock payment system, strengthening authentication with security features.
+
+### Features Implemented
+- Payment System
+- Built a Wallet dashboard displaying the current balance.
+- Implemented mock Deposit, Withdraw, and Transfer functionality.
+- Added a Transaction History section with dynamic transaction records.
+- Created a Funding Deal interface for simulated investor funding.
+- Used localStorage to persist wallet balance and transaction history.
+
+### Security
+- Integrated a Password Strength Meter for secure password validation.
+- Implemented a mock OTP (Two-Factor Authentication) verification flow and displayed the demo OTP (123456) in the interface for   testing the deployed application.
+- Added Role-Based Access Control (RBAC) for Entrepreneur and Investor dashboards.

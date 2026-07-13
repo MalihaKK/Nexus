@@ -12,6 +12,7 @@ interface CollaborationContextType {
 
   addSlot: (slot: AvailabilitySlot) => void;
   deleteSlot: (id: string) => void;
+  deleteConfirmedMeeting: (id: string) => void;
   updateSlot: (id: string, title: string) => void;
 
   sendRequest: (request: MeetingRequest) => void;
@@ -27,32 +28,32 @@ const CollaborationContext = createContext<CollaborationContextType | null>(
 export const CollaborationProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
- const [slots, setSlots] = useState<AvailabilitySlot[]>(() => {
-  const saved = localStorage.getItem("slots");
-  return saved ? JSON.parse(saved) : [];
-});
+  const [slots, setSlots] = useState<AvailabilitySlot[]>(() => {
+    const saved = localStorage.getItem("slots");
+    return saved ? JSON.parse(saved) : [];
+  });
 
-const [requests, setRequests] = useState<MeetingRequest[]>(() => {
-  const saved = localStorage.getItem("requests");
-  return saved ? JSON.parse(saved) : [];
-});
+  const [requests, setRequests] = useState<MeetingRequest[]>(() => {
+    const saved = localStorage.getItem("requests");
+    return saved ? JSON.parse(saved) : [];
+  });
 
-const [confirmed, setConfirmed] = useState<ConfirmedMeeting[]>(() => {
-  const saved = localStorage.getItem("confirmed");
-  return saved ? JSON.parse(saved) : [];
-});
+  const [confirmed, setConfirmed] = useState<ConfirmedMeeting[]>(() => {
+    const saved = localStorage.getItem("confirmed");
+    return saved ? JSON.parse(saved) : [];
+  });
 
-useEffect(() => {
-  localStorage.setItem("slots", JSON.stringify(slots));
-}, [slots]);
+  useEffect(() => {
+    localStorage.setItem("slots", JSON.stringify(slots));
+  }, [slots]);
 
-useEffect(() => {
-  localStorage.setItem("requests", JSON.stringify(requests));
-}, [requests]);
+  useEffect(() => {
+    localStorage.setItem("requests", JSON.stringify(requests));
+  }, [requests]);
 
-useEffect(() => {
-  localStorage.setItem("confirmed", JSON.stringify(confirmed));
-}, [confirmed]);
+  useEffect(() => {
+    localStorage.setItem("confirmed", JSON.stringify(confirmed));
+  }, [confirmed]);
 
   const addSlot = (slot: AvailabilitySlot) => {
     setSlots((prev) => [...prev, slot]);
@@ -62,9 +63,15 @@ useEffect(() => {
     setSlots((prev) => prev.filter((slot) => slot.id !== id));
   };
 
+  const deleteConfirmedMeeting = (id: string) => {
+    setConfirmed((prev) =>
+      prev.filter((meeting) => meeting.id !== id)
+    );
+  };
+
   const updateSlot = (id: string, title: string) => {
     setSlots((prev) =>
-      prev.map((slot) => (slot.id === id ? { ...slot, title } : slot)),
+      prev.map((slot) => (slot.id === id ? { ...slot, title } : slot))
     );
   };
 
@@ -108,8 +115,10 @@ useEffect(() => {
         slots,
         requests,
         confirmed,
+
         addSlot,
         deleteSlot,
+        deleteConfirmedMeeting,
         updateSlot,
 
         sendRequest,
@@ -128,7 +137,7 @@ export const useCollaboration = () => {
 
   if (!context) {
     throw new Error(
-      "useCollaboration must be used within CollaborationProvider",
+      "useCollaboration must be used within CollaborationProvider"
     );
   }
 

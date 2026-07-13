@@ -4,9 +4,9 @@ import {
   Users,
   Bell,
   Calendar,
-  TrendingUp,
   AlertCircle,
   PlusCircle,
+  DollarSign,
 } from "lucide-react";
 import { Button } from "../../components/ui/Button";
 import { Card, CardBody, CardHeader } from "../../components/ui/Card";
@@ -68,6 +68,18 @@ export const EntrepreneurDashboard: React.FC = () => {
   const pendingRequests = collaborationRequests.filter(
     (req) => req.status === "pending",
   );
+
+  const transactions = JSON.parse(
+    localStorage.getItem("nexus-payments") || "[]",
+  );
+
+  const fundingReceived = transactions
+    .filter((t: any) => t.type === "Funding")
+    .reduce((sum: number, t: any) => sum + t.amount, 0);
+
+  const recentFunding = transactions
+    .filter((t: any) => t.type === "Funding")
+    .slice(0, 5);
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -148,13 +160,17 @@ export const EntrepreneurDashboard: React.FC = () => {
           <CardBody>
             <div className="flex items-center">
               <div className="p-3 bg-success-100 rounded-full mr-4">
-                <TrendingUp size={20} className="text-success-700" />
+                <DollarSign size={20} className="text-success-700" />
               </div>
+
               <div>
                 <p className="text-sm font-medium text-success-700">
-                  Profile Views
+                  Funding Received
                 </p>
-                <h3 className="text-xl font-semibold text-success-900">24</h3>
+
+                <h3 className="text-xl font-semibold text-success-900">
+                  ${fundingReceived.toLocaleString()}
+                </h3>
               </div>
             </div>
           </CardBody>
@@ -165,6 +181,38 @@ export const EntrepreneurDashboard: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           <AvailabilityCalendar />
+        </div>
+
+        <Card>
+          <CardHeader>
+            <h2 className="text-lg font-semibold">Recent Investments</h2>
+          </CardHeader>
+
+          <CardBody>
+            {recentFunding.length === 0 ? (
+              <p className="text-gray-500">No investments received yet.</p>
+            ) : (
+              <div className="space-y-3">
+                {recentFunding.map((item: any) => (
+                  <div
+                    key={item.id}
+                    className="border rounded-lg p-3 flex justify-between"
+                  >
+                    <div>
+                      <p className="font-medium">{item.sender}</p>
+
+                      <p className="text-sm text-gray-500">{item.date}</p>
+                    </div>
+
+                    <div className="font-semibold text-green-600">
+                      +${item.amount}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardBody>
+        </Card>
         </div>
 
         <div className="space-y-6">
@@ -231,7 +279,7 @@ export const EntrepreneurDashboard: React.FC = () => {
             </CardBody>
           </Card>
         </div>
-      </div>
+      
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Collaboration requests */}

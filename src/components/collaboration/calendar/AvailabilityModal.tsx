@@ -25,7 +25,9 @@ export const AvailabilityModal: React.FC<Props> = ({
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
       <div className="bg-white rounded-2xl p-6 w-full max-w-md space-y-4 animate-slide-in">
-        <h2 className="text-lg font-semibold">Add Availability</h2>
+        <h2 className="text-lg font-semibold">
+          {onDelete ? "Edit Availability" : "Add Availability"}
+        </h2>
 
         <p className="text-sm text-gray-500">{date}</p>
 
@@ -43,7 +45,20 @@ export const AvailabilityModal: React.FC<Props> = ({
 
         <div className="flex justify-between gap-2">
           {onDelete && (
-            <Button variant="outline" onClick={onDelete}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                console.log("Delete button clicked");
+                if (
+                  window.confirm(
+                    "Are you sure you want to delete this availability slot?",
+                  )
+                ) {
+                  console.log("Calling onDelete");
+                  onDelete?.();
+                }
+              }}
+            >
               Delete
             </Button>
           )}

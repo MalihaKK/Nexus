@@ -11,8 +11,14 @@ import { useCollaboration } from "../../../context/CollaborationContext";
 import { useAuth } from "../../../context/AuthContext";
 
 export const AvailabilityCalendar: React.FC = () => {
-  const { slots, confirmed, addSlot, updateSlot, deleteSlot } =
-    useCollaboration();
+  const {
+    slots,
+    confirmed,
+    addSlot,
+    updateSlot,
+    deleteSlot,
+    deleteConfirmedMeeting,
+  } = useCollaboration();
 
   const { user } = useAuth();
 
@@ -21,34 +27,60 @@ export const AvailabilityCalendar: React.FC = () => {
   const [editingSlot, setEditingSlot] = useState<any>(null);
 
   const handleEventClick = (clickInfo: any) => {
-    const [start, end] = clickInfo.event.title.split(" - ");
+    const event = clickInfo.event;
+
+    // Confirmed meeting
+    if (event.extendedProps.type === "meeting") {
+      setEditingSlot({
+        id: event.id,
+        type: "meeting",
+        date: event.startStr,
+        start: "",
+        end: "",
+      });
+
+      return;
+    }
+
+    // Availability slot
+    const [start, end] = event.title.split(" - ");
 
     setEditingSlot({
-      id: clickInfo.event.id,
-      date: clickInfo.event.startStr,
+      id: event.id,
+      type: "slot",
+      date: event.startStr,
       start,
       end,
     });
   };
-  const calendarEvents = [
-  ...slots,
 
-  ...confirmed
-    .filter(
-      (meeting) =>
-        meeting.senderId === user?.id ||
-        meeting.receiverId === user?.id
-    )
-    .map((meeting) => ({
-      id: meeting.id,
-      title:
-        user?.id === meeting.receiverId
-          ? `Meeting with ${meeting.senderName}`
-          : `Meeting with ${meeting.receiverName}`,
-      start: `${meeting.date}T${meeting.time}`,
-      color: "#2563eb",
+  const calendarEvents = [
+    ...slots.map((slot) => ({
+      ...slot,
+      extendedProps: {
+        type: "slot",
+      },
     })),
-];
+
+    ...confirmed
+      .filter(
+        (meeting) =>
+          meeting.senderId === user?.id ||
+          meeting.receiverId === user?.id
+      )
+      .map((meeting) => ({
+        id: meeting.id,
+        title:
+          user?.id === meeting.receiverId
+            ? `Meeting with ${meeting.senderName}`
+            : `Meeting with ${meeting.receiverName}`,
+        start: `${meeting.date}T${meeting.time}`,
+        color: "#2563eb",
+        extendedProps: {
+          type: "meeting",
+        },
+      })),
+  ];
 
   return (
     <>
@@ -56,6 +88,7 @@ export const AvailabilityCalendar: React.FC = () => {
         <CardHeader className="flex justify-between items-center">
           <div className="flex items-center gap-2">
             <CalendarDays size={20} className="text-primary-600" />
+
             <h2 className="text-lg font-medium text-gray-900">
               Availability Calendar
             </h2>
@@ -72,10 +105,7 @@ export const AvailabilityCalendar: React.FC = () => {
               plugins={[dayGridPlugin, interactionPlugin]}
               initialView="dayGridMonth"
               events={calendarEvents}
-              dateClick={(info) => {
-                console.log(info.dateStr);
-                setSelectedDate(info.dateStr);
-              }}
+              dateClick={(info) => setSelectedDate(info.dateStr)}
               eventClick={handleEventClick}
               height="auto"
             />
@@ -83,6 +113,7 @@ export const AvailabilityCalendar: React.FC = () => {
         </CardBody>
       </Card>
 
+      {/* Add Slot */}
       {selectedDate && (
         <AvailabilityModal
           date={selectedDate}
@@ -98,6 +129,8 @@ export const AvailabilityCalendar: React.FC = () => {
           }}
         />
       )}
+
+      {/* Edit/Delete */}
       {editingSlot && (
         <AvailabilityModal
           date={editingSlot.date}
@@ -105,12 +138,19 @@ export const AvailabilityCalendar: React.FC = () => {
           initialEnd={editingSlot.end}
           onClose={() => setEditingSlot(null)}
           onSave={(start, end) => {
-            updateSlot(editingSlot.id, `${start} - ${end}`);
+            if (editingSlot.type === "slot") {
+              updateSlot(editingSlot.id, `${start} - ${end}`);
+            }
 
             setEditingSlot(null);
           }}
           onDelete={() => {
-            deleteSlot(editingSlot.id);
+            if (editingSlot.type === "slot") {
+              deleteSlot(editingSlot.id);
+            } else {
+              deleteConfirmedMeeting(editingSlot.id);
+            }
+
             setEditingSlot(null);
           }}
         />
